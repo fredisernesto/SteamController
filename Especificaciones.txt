@@ -1,0 +1,7 @@
+Programación de ESP32 integrando los sensores:
+* DHT11
+* MAX6675
+* Sensor de nivel
+Tambien con los siguientes elementos finales de control:
+* 2 electrova´lvulas
+* Tetera
