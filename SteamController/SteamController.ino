@@ -3,13 +3,15 @@
 #include "DHT.h"
 
 //Pins definition
-#define DHTTYPE        DHT11
-#define DHTPIN         2 
-#define SteamValvePIN  23
-#define WaterValvePIN  22
-#define StrovePIN      21
-#define WaterLevelPIN  33
-#define StroveLevelPIN 32
+#define DHTTYPE           DHT11
+#define DHTPIN              2 
+#define SteamValvePIN       23
+#define WaterValvePIN       22
+#define StrovePIN           21
+#define WaterLevelPIN       33
+#define StroveLevelPIN      32
+#define WaterLevelAlarmPIN  19
+
 
 //Setpoints
 #define TempSnow       0
@@ -40,11 +42,13 @@ void setup() {
   pinMode(StrovePIN,OUTPUT);
   pinMode(WaterValvePIN,OUTPUT);
   pinMode(SteamValvePIN,OUTPUT);
+  pinMode(WaterLevelAlarmPIN, OUTPUT);
   //pinMode(WaterLevelPIN,INPUT);
   pinMode(StroveLevelPIN,INPUT); 
   digitalWrite(StrovePIN,HIGH);
   digitalWrite(WaterValvePIN,LOW);
   digitalWrite(SteamValvePIN,LOW);
+  digitalWrite(WaterLevelAlarmPIN, LOW);
   dht.begin();
   Serial.begin(9600);
   WiFi.mode(WIFI_AP);
@@ -59,10 +63,13 @@ void setup() {
 }
 
 void loop() {
-  // To read sensors
+  // Reading sensors
   Temp = dht.readTemperature();
   Hum = dht.readHumidity();
   WaterLevel=analogRead(WaterLevelPIN);
+  StroveLevel=digitalRead(StroveLevelPIN);
+  
+  //  Monitor
   Serial.print(F("Humidity: "));
   Serial.print(Hum);
   Serial.print(F("%  Temperature: "));
@@ -70,7 +77,11 @@ void loop() {
   Serial.println(F("°C "));
   Serial.print(F("Water level "));
   Serial.println(WaterLevel);
+  Serial.print(F("Strove level "));
+  Serial.println(StroveLevel);
   
+   //Testing
+   /*
   digitalWrite(StrovePIN,HIGH);
   digitalWrite(WaterValvePIN,HIGH);
   digitalWrite(SteamValvePIN,HIGH);
@@ -79,13 +90,23 @@ void loop() {
   digitalWrite(WaterValvePIN,LOW);
   digitalWrite(SteamValvePIN,LOW);
   delay(1000);
+*/
   //Control cicles
   if(Temp<TempSnow)//Strove Steamvalve on
+  {
+    digitalWrite(StrovePIN,HIGH);
+    digitalWrite(SteamValvePIN,HIGH);
+  }
   if(Temp>TempSnow)//Strove Steamvalve off
-  if(StroveLevel == false)//Strove Level Alarm
-  if(WaterLevel == false)//Water Level Alarm
-
-  delay(1000);
+  {
+    digitalWrite(StrovePIN,LOW);
+    digitalWrite(SteamValvePIN,LOW);
+  }
+  if(StroveLevel == false) digitalWrite(WaterValvePIN,HIGH);//Strove Level Alarm
+  else digitalWrite(WaterValvePIN,LOW);
+  if(WaterLevel < 170) digitalWrite(WaterLevelAlarmPIN,HIGH);//Water Level Alarm
+  else digitalWrite(WaterLevelAlarmPIN,LOW);
+  delay(2000);
   
   
   //Servers

@@ -1,0 +1,11 @@
+* Board	ESP32
+
+*	ACTUATORS
+-> 23	Steam Valve
+-> 22	Water Valve
+-> 21	Strove
+
+*	SENSORS
+-> 2	DHT11
+-> 33	Water Tank Level
+-> 32	Strove Level
