@@ -4,6 +4,7 @@
 -> 23	Steam Valve
 -> 22	Water Valve
 -> 21	Strove
+-> 19   Water Level Alarm
 
 *	SENSORS
 -> 2	DHT11
